@@ -1,0 +1,47 @@
+replicaCount: 1
+
+serviceAccount:
+  create: true
+  name: quote-api-ksa
+
+projectId: daring-emitter-457812-v7 
+
+image:
+  repository: ""
+  pullPolicy: Always
+  tag: ""
+
+service:
+  type: LoadBalancer
+  port: 8080
+
+# Ingress configuration
+ingress:
+  enabled: false
+  annotations: {}
+  hosts:
+    - host: example.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 70
+
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "8080"
+  prometheus.io/path: "/metrics"
+
+resources: 
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+

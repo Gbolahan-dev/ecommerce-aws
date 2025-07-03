@@ -1,0 +1,30 @@
+# buildspec.yml - Instructions for AWS CodeBuild
+
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 20
+  pre_build:
+    command:
+      - echo "Logging in to Amazon ECR..."
+      # The $AWS_ACCOUNT_ID and $AWS_DEFAULT_REGION are environment variables provided by CodeBuild.
+      # The `aws ecr get-login-password` command gets a temporary password for Docker.
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      # Set up some variables for our image tags
+      - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/ecommerce-app
+      - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7) # Equivalent to SHORT_SHA
+
+  build:
+    command:
+      - echo "Build started on `date`"
+      - echo "Building the Docker image..."
+      - docker build -t $REPOSITORY_URI:latest -t $REPOSITORY_URI:$IMAGE_TAG .
+  post_build:
+    command:
+      - echo "Build completed on `date`"
+      - echo "Pushing the Docker images to ECR..."
+      - docker push $REPOSITORY_URI:latest
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      # We will add Terraform steps here later
