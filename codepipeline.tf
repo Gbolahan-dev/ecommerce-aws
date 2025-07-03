@@ -1,5 +1,7 @@
 # codepipeline.tf
 
+data "aws_caller_identity" "current" {}
+
 # 1. IAM Role for CodePipeline
 #    This role gives CodePipeline permission to read from GitHub (source)
 #    and start CodeBuild projects (build).
@@ -37,6 +39,15 @@ resource "aws_iam_role_policy" "codepipeline_policy" {
         Resource = [
           "arn:aws:s3:::*" # Broad permission for artifacts, can be scoped down
         ]
+      },
+      {
+       "Effect": "Allow",
+       "Action": [
+       "kms:Decrypt",
+       "kms:Encrypt",
+       "kms:GenerateDataKey"
+       ],
+       "Resource": "*" // Allows using the default AWS-managed keys
       },
       {
         Effect   = "Allow",
@@ -106,7 +117,15 @@ resource "aws_codebuild_project" "main" {
     type                        = "LINUX_CONTAINER"
     privileged_mode             = true # Required to build Docker images
     image_pull_credentials_type = "CODEBUILD"
-  }
+  
+    environment_variable {
+      name  = "AWS_ACCOUNT_ID" 
+      value = data.aws_caller_identity.current.account_id
+      type  = "PLAINTEXT"
+    }
+   }
+  
+  
 
   source {
     type      = "CODEPIPELINE"
