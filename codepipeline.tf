@@ -52,7 +52,11 @@ resource "aws_iam_role_policy" "codepipeline_policy" {
       {
         Effect   = "Allow",
         Action   = [
-          "codebuild:StartBuild"
+             "codebuild:StartBuild",
+             "codebuild:StopBuild",
+             "codebuild:RetryBuild",
+             "codebuild:BatchGetBuilds",
+             "codebuild:StartBuildBatch"
         ],
         Resource = [aws_codebuild_project.main.arn]
       },
