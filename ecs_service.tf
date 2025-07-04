@@ -67,6 +67,8 @@ resource "aws_ecs_service" "main" {
 
   launch_type = "FARGATE"
 
+  force_new_deployment = true
+
   network_configuration {
     # Place our tasks in the private subnets we created
     subnets         = module.vpc.private_subnets
@@ -77,7 +79,7 @@ resource "aws_ecs_service" "main" {
   load_balancer {
     target_group_arn = aws_alb_target_group.default.arn
     container_name   = "ecommerce-app-container"
-    container_port   = 80
+    container_port   = 3000
   }
 
   # This ensures that Terraform doesn't try to destroy the old service
