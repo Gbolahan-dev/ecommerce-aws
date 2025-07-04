@@ -188,7 +188,7 @@ resource "aws_codepipeline" "main" {
         ConnectionArn    = aws_codestarconnections_connection.github.arn
         FullRepositoryId = "Gbolahan-dev/ecommerce-aws" # <--- IMPORTANT: Update this to your repo name
         BranchName       = "main"
-        TriggerOnPush    =  true
+        
       }
     }
   }
