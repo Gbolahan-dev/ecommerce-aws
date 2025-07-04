@@ -41,16 +41,17 @@ resource "aws_ecs_task_definition" "app" {
 
   # This is the definition of the actual container to run
   container_definitions = jsonencode([
-    {
-      name      = "ecommerce-app-container"
-      # We'll use a public placeholder image for now.
-      # Our CI/CD pipeline will replace this with our real image later.
-      image     = "nginxdemos/hello"
+        }{
+      name      = "ecommerce-app"
+      # THIS IS THE CORRECTED LINE:
+      image     = "${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/ecommerce-app:${var.image_tag}"
+      cpu       = 256
+      memory    = 512
       essential = true
       portMappings = [
         {
-          containerPort = 80
-          hostPort      = 80
+          containerPort = 3000
+          hostPort      = 3000
         }
       ]
     }

@@ -37,5 +37,4 @@ phases:
       # We will add Terraform steps here later
       - echo "Deploying to ECS..."
       - terraform init
-      - terraform apply -auto-approve -var="image_tag=$IMAGE_TAG" 
-
+      - terraform apply -auto-approve -var="image_tag=$IMAGE_TAG" -var="aws_account_id=$AWS_ACCOUNT_ID"
