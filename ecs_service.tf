@@ -41,16 +41,16 @@ resource "aws_ecs_task_definition" "app" {
 
   # This is the definition of the actual container to run
   container_definitions = jsonencode([
-        }{
-      name      = "ecommerce-app"
+    {
+      name      = "ecommerce-app",
       # THIS IS THE CORRECTED LINE:
       image     = "${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/ecommerce-app:${var.image_tag}"
-      cpu       = 256
-      memory    = 512
-      essential = true
+      cpu       = 256,
+      memory    = 512,
+      essential = true,
       portMappings = [
         {
-          containerPort = 3000
+          containerPort = 3000,
           hostPort      = 3000
         }
       ]
