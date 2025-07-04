@@ -62,7 +62,7 @@ resource "aws_ecs_task_definition" "app" {
 resource "aws_ecs_service" "main" {
   name            = "ecommerce-service"
   cluster         = aws_ecs_cluster.main.id
-  task_definition = aws_ecs_task_definition.app.family
+  task_definition = aws_ecs_task_definition.app.arn
   desired_count   = 2 # Run two instances of our container for high availability
 
   launch_type = "FARGATE"
