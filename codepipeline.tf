@@ -110,6 +110,7 @@ resource "aws_codebuild_project" "main" {
   description   = "Builds the ecommerce-app Docker image"
   service_role  = aws_iam_role.codebuild_role.arn
   build_timeout = "20" # minutes
+       
 
   artifacts {
     type = "CODEPIPELINE" # Artifacts will be managed by CodePipeline
@@ -187,6 +188,7 @@ resource "aws_codepipeline" "main" {
         ConnectionArn    = aws_codestarconnections_connection.github.arn
         FullRepositoryId = "Gbolahan-dev/ecommerce-aws" # <--- IMPORTANT: Update this to your repo name
         BranchName       = "main"
+        TriggerOnPush    =  true
       }
     }
   }
