@@ -10,8 +10,8 @@ resource "aws_security_group" "ecs_tasks_sg" {
   
   ingress {
     description = "Allow traffic from within the VPC"
-    from_port   = 80
-    to_port     = 80
+    from_port   = 3000
+    to_port     = 3000
     protocol    = "tcp"
     # Allow traffic from any IP address inside our VPC
     cidr_blocks = [module.vpc.vpc_cidr_block]
@@ -62,7 +62,7 @@ resource "aws_ecs_task_definition" "app" {
 resource "aws_ecs_service" "main" {
   name            = "ecommerce-service"
   cluster         = aws_ecs_cluster.main.id
-  task_definition = aws_ecs_task_definition.app.arn
+  task_definition = aws_ecs_task_definition.app.family
   desired_count   = 2 # Run two instances of our container for high availability
 
   launch_type = "FARGATE"
@@ -84,7 +84,5 @@ resource "aws_ecs_service" "main" {
 
   # This ensures that Terraform doesn't try to destroy the old service
   # before the new one is healthy and serving traffic.
-  lifecycle {
-    ignore_changes = [task_definition]
-  }
+  #lifecycle { ignore_changes = [task_definition] }
 }
