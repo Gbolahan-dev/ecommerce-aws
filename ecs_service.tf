@@ -78,7 +78,7 @@ resource "aws_ecs_service" "main" {
   # Connect the service to our Application Load Balancer
   load_balancer {
     target_group_arn = aws_alb_target_group.default.arn
-    container_name   = "ecommerce-app-container"
+    container_name   = "ecommerce-app"
     container_port   = 3000
   }
 
