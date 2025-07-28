@@ -49,7 +49,7 @@ resource "aws_security_group" "lb_sg" {
 # We will create a "dummy" target group for now, as ECS will manage the real targets.
 resource "aws_alb_target_group" "default" {
   name     = "ecommerce-default-tg"
-  port     = 8000
+  port     = 8080
   protocol = "HTTP"
   vpc_id   = module.vpc.vpc_id
   target_type       = "ip"
