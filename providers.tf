@@ -1,4 +1,4 @@
-/*terraform {
+terraform {
    backend "s3" {
      bucket         = "tf-state-ecommerce-346032389979"
      key            = "global/s3-backend/terraform.tfstate" 
@@ -20,5 +20,5 @@
 provider "aws" {
   region = "us-east-1"
 }
-*/
+
 
