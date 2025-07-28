@@ -10,8 +10,8 @@ resource "aws_security_group" "ecs_tasks_sg" {
   
   ingress {
     description = "Allow traffic from within the VPC"
-    from_port   = 3000
-    to_port     = 3000
+    from_port   = 8000
+    to_port     = 8000
     protocol    = "tcp"
     # Allow traffic from any IP address inside our VPC
     cidr_blocks = [module.vpc.vpc_cidr_block]
@@ -50,8 +50,8 @@ resource "aws_ecs_task_definition" "app" {
       essential = true,
       portMappings = [
         {
-          containerPort = 3000,
-          hostPort      = 3000
+          containerPort = 8000,
+          hostPort      = 8000
         }
       ]
     }
@@ -79,7 +79,7 @@ resource "aws_ecs_service" "main" {
   load_balancer {
     target_group_arn = aws_alb_target_group.default.arn
     container_name   = "ecommerce-app"
-    container_port   = 3000
+    container_port   = 8000
   }
 
   # This ensures that Terraform doesn't try to destroy the old service
