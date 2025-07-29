@@ -14,7 +14,7 @@ resource "aws_security_group" "ecs_tasks_sg" {
     to_port     = 8080
     protocol    = "tcp"
     # Allow traffic from any IP address inside our VPC
-    cidr_blocks = [module.vpc.vpc_cidr_block]
+   security_groups = [aws_security_group..lb_sg.id]
   }
   # Egress (outbound) rule: Allow the container to make requests to anywhere.
   # This is needed for it to connect to the internet via the NAT Gateway.
