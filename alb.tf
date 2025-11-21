@@ -48,7 +48,7 @@ resource "aws_security_group" "lb_sg" {
 # This is where the ALB will send traffic. Our ECS service will register its tasks here.
 # We will create a "dummy" target group for now, as ECS will manage the real targets.
 resource "aws_alb_target_group" "default" {
-  name     = "ecommerce-default-tg"
+  name     = "ecommerce-tg-v2"
   port     = 8080
   protocol = "HTTP"
   vpc_id   = module.vpc.vpc_id

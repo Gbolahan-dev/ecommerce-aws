@@ -5,8 +5,8 @@ data "aws_caller_identity" "current" {}
 # 1. IAM Role for CodePipeline
 #    This role gives CodePipeline permission to read from GitHub (source)
 #    and start CodeBuild projects (build).
-resource "aws_iam_role" "codepipeline_role" {
-  name = "codepipeline-ecommerce-role"
+resource "aws_iam_role" "codepipeline_role_v2" {
+  name = "codepipeline-ecommerce-role-v2"
 
   assume_role_policy = jsonencode({
     Version   = "2012-10-17"
@@ -25,7 +25,7 @@ resource "aws_iam_role" "codepipeline_role" {
 # Attach a policy to the CodePipeline role
 resource "aws_iam_role_policy" "codepipeline_policy" {
   name = "codepipeline-ecommerce-policy"
-  role = aws_iam_role.codepipeline_role.id
+  role = aws_iam_role.codepipeline_role_v2.id
 
   policy = jsonencode({
     Version   = "2012-10-17"
@@ -75,8 +75,8 @@ resource "aws_iam_role_policy" "codepipeline_policy" {
 # 2. IAM Role for CodeBuild
 #    This role gives our build server permissions to do its job, like
 #    logging to CloudWatch, talking to ECR, and running Terraform.
-resource "aws_iam_role" "codebuild_role" {
-  name = "codebuild-ecommerce-role"
+resource "aws_iam_role" "codebuild_role_v2" {
+  name = "codebuild-ecommerce-role-v2"
 
   assume_role_policy = jsonencode({
     Version   = "2012-10-17"
@@ -98,7 +98,7 @@ resource "aws_iam_role" "codebuild_role" {
 # For this project, AdministratorAccess is much simpler and will prevent
 # a lot of the IAM debugging we had to do on GCP.
 resource "aws_iam_role_policy_attachment" "codebuild_admin_access" {
-  role       = aws_iam_role.codebuild_role.name
+  role       = aws_iam_role.codebuild_role_v2.name
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
 
@@ -108,7 +108,7 @@ resource "aws_iam_role_policy_attachment" "codebuild_admin_access" {
 resource "aws_codebuild_project" "main" {
   name          = "ecommerce-app-build"
   description   = "Builds the ecommerce-app Docker image"
-  service_role  = aws_iam_role.codebuild_role.arn
+  service_role  = aws_iam_role.codebuild_role_v2.arn
   build_timeout = "20" # minutes
        
 
@@ -160,7 +160,7 @@ resource "aws_codestarconnections_connection" "github" {
 #    This defines the stages of our CI/CD process.
 resource "aws_codepipeline" "main" {
   name     = "ecommerce-app-pipeline"
-  role_arn = aws_iam_role.codepipeline_role.arn
+  role_arn = aws_iam_role.codepipeline_role_v2.arn
 
   # The artifact_store defines an S3 bucket where the pipeline will store
   # intermediate files (like the source code it downloads).
@@ -218,5 +218,5 @@ resource "aws_codepipeline" "main" {
 
 # S3 Bucket for CodePipeline artifacts
 resource "aws_s3_bucket" "codepipeline_artifacts" {
-  bucket = "codepipeline-artifacts-ecommerce-${var.aws_account_id}"
+  bucket = "codepipeline-artifacts-ecommerce-346032389979"
 }

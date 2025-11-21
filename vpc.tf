@@ -23,8 +23,8 @@ module "vpc" {
   # Create a NAT gateway. This allows containers in the private subnets
   # to make outbound requests to the internet (e.g., to pull dependencies),
   # but the internet cannot initiate connections to them.
-  enable_nat_gateway = true
-  single_nat_gateway = true # For cost savings in dev/test, use one NAT gateway for all private subnets.
+  enable_nat_gateway = false
+  single_nat_gateway = false # For cost savings in dev/test, use one NAT gateway for all private subnets.
 
   # Tags are useful for identifying resources
   tags = {

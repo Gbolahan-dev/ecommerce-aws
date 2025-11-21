@@ -37,7 +37,7 @@ resource "aws_ecs_task_definition" "app" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = "256"  # 256 CPU units (.25 vCPU)
   memory                   = "512"  # 512 MB of memory
-  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  execution_role_arn       = aws_iam_role.ecs_task_execution_role_v2.arn
 
   # This is the definition of the actual container to run
   container_definitions = jsonencode([
@@ -63,7 +63,7 @@ resource "aws_ecs_service" "main" {
   name            = "ecommerce-service"
   cluster         = aws_ecs_cluster.main.id
   task_definition = aws_ecs_task_definition.app.arn
-  desired_count   = 2 # Run two instances of our container for high availability
+  desired_count   = 1 
 
   launch_type = "FARGATE"
 
@@ -71,8 +71,9 @@ resource "aws_ecs_service" "main" {
 
   network_configuration {
     # Place our tasks in the private subnets we created
-    subnets         = module.vpc.private_subnets
-    security_groups = [aws_security_group.ecs_tasks_sg.id]
+    subnets          = module.vpc.public_subnets
+    assign_public_ip = true
+    security_groups  = [aws_security_group.ecs_tasks_sg.id]
   }
 
   # Connect the service to our Application Load Balancer
